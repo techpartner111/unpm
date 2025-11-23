@@ -5,6 +5,7 @@ import labImg from "../assets/fasilitas/lab/1.jpg";
 import perpustakaanImg from "../assets/fasilitas/perpustakaan/1.jpg";
 import gorImg from "../assets/fasilitas/gor/1.jpg";
 import grahaImg from "../assets/fasilitas/graha/1.jpg";
+import lImg from "../assets/fasilitas/lt/1.jpg";
 import {
   Building2,
   Beaker,
@@ -51,6 +52,13 @@ export default function Fasilitas() {
       id: "graha",
       nama: "Graha Cendekia",
       gambar: grahaImg,
+      icon: Building2,
+      gradient: "from-cyan-600 to-blue-600",
+    },
+    {
+      id: "lt",
+      nama: "Lab Teknik",
+      gambar: lImg,
       icon: Building2,
       gradient: "from-cyan-600 to-blue-600",
     },
