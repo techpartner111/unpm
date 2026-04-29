@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import api from "../api/axios";
 import { GraduationCap, Award, Sparkles, ChevronRight, X } from "lucide-react";
+
 
 const FontLinks = () => (
   <>
@@ -20,90 +22,37 @@ const FontLinks = () => (
 );
 
 export default function ProgramListAdvanced() {
-  const data = [
-    {
-      jenjang: "Pascasarjana (S2)",
-      key: "s2",
-      icon: <Award className="w-5 h-5 text-white" />,
-      faculties: [
-        {
-          name: "Pascasarjana",
-          programs: [
-            "Pascasarjana Pendidikan Ilmu Bahasa dan Sastra Indonesia",
-            "Pascasarjana Pendidikan Ilmu Pengetahuan Sosial",
-            "Pascasarjana Pendidikan Dasar",
-            "Pascasarjana Bimbingan dan Konseling",
-          ],
-        },
-      ],
-    },
-    {
-      jenjang: "Sarjana (S1)",
-      key: "s1",
-      icon: <GraduationCap className="w-5 h-5 text-white" />,
-      faculties: [
-        {
-          name: "Fakultas Keguruan dan Ilmu Pendidikan (FKIP)",
-          programs: [
-            "Pendidikan Guru Sekolah Dasar",
-            "Pendidikan Guru Pendidikan Anak Usia Dini",
-            "Bimbingan Konseling",
-            "Pendidikan Pancasila dan Kewarganegaraan",
-            "Pendidikan Sejarah",
-            "Pendidikan Akuntansi",
-            "Pendidikan Ekonomi",
-            "Pendidikan Bahasa dan Sastra Indonesia",
-            "Pendidikan Bahasa Inggris",
-            "Pendidikan Matematika",
-            "Pendidikan Biologi",
-            "Pendidikan Profesi Guru",
-            "Pendidikan Fisika",
-            "Pendidikan Teknik Elektro",
-            "Pendidikan Ilmu Pengetahuan Alam",
-          ],
-        },
-        {
-          name: "Fakultas Ekonomi dan Bisnis (FEB)",
-          programs: ["Akuntansi", "Manajemen", "Perpajakan"],
-        },
-        {
-          name: "Fakultas Ilmu Kesehatan dan Sains (FIKS)",
-          programs: ["Farmasi", "Ilmu Keolahragaan"],
-        },
-        {
-          name: "Fakultas Teknik (FT)",
-          programs: [
-            "Teknik Informatika",
-            "Sistem Informasi",
-            "Teknik Industri",
-            "Teknik Kimia",
-            "Teknik Elektro",
-          ],
-        },
-        {
-          name: "Fakultas Hukum (FH)",
-          programs: ["Ilmu Hukum"],
-        },
-      ],
-    },
-    {
-      jenjang: "Diploma (D3)",
-      key: "d3",
-      icon: <Sparkles className="w-5 h-5 text-white" />,
-      faculties: [
-        {
-          name: "Program Diploma",
-          programs: ["D3 Manajemen Pajak"],
-        },
-      ],
-    },
-  ];
+const [data, setData] = useState([]);
 
   const [activeJenjang, setActiveJenjang] = useState("s2");
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState(null);
   const [selectedFaculty, setSelectedFaculty] = useState(null);
+  
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const res = await api.get("/program-studi");
 
+      // mapping biar sesuai format kamu
+      const formatted = res.data.map((item) => ({
+        jenjang: item.nama,
+        key: item.nama.toLowerCase(),
+        faculties: item.fakultas.map((f) => ({
+          name: f.nama,
+          programs: f.prodis.map((p) => p.nama),
+        })),
+      }));
+
+      setData(formatted);
+      setActiveJenjang(formatted[0]?.key);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  fetchData();
+}, []);
   const openDetail = (facultyName, programName, jenjangLabel) => {
     setSelectedFaculty(facultyName);
     setSelectedProgram({ name: programName, jenjang: jenjangLabel });
@@ -116,8 +65,9 @@ export default function ProgramListAdvanced() {
     setSelectedFaculty(null);
   };
 
-  const activeData = data.find((d) => d.key === activeJenjang);
-
+ const activeData = data.find((d) => d.key === activeJenjang) || {
+  faculties: [],
+};
   return (
     <>
       <FontLinks />
@@ -228,7 +178,7 @@ export default function ProgramListAdvanced() {
                 </div>
               </div>
               <a
-                href="/register"
+                href="https://pmb.unipma.ac.id/portal/daftar"
                 className="ml-4 inline-flex items-center gap-2 px-5 py-2 rounded-xl border border-[#0EA5E9] text-[#2a54c6] font-semibold hover:bg-[#00a2ff] hover:text-[#ffffff] transition-all"
               >
                 Daftar Sekarang

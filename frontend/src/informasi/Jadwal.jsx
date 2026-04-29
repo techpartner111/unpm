@@ -1,42 +1,42 @@
-import React from "react";
-import jadwalImg from "../assets/images/jadwal.jpeg";
+import React, { useEffect, useState } from "react";
 import { Calendar, Clock, FileCheck, Sparkles } from "lucide-react";
+import api from "../api/axios";
 
 export default function Jadwal() {
-  const gelombangs = [
-    {
-      title: "Gelombang 1",
-      data: [
-        { jalur: "PMDK Raport", pendaftaran: "1 Desember 2025 - 30 April 2026", daftarUlang: "30 april 2026" },
-        { jalur: "SKL/Ijasah", pendaftaran: "1 Desember 2025 - 30 April 2026", daftarUlang: "30 april 2026" },
-      ],
-    },
-    {
-      title: "Gelombang 2",
-      data: [
-        { jalur: "PMDK Raport", pendaftaran: "1 Mei 2026 - 31 Juli 2026", daftarUlang: "1 Agustus 2026" },
-        { jalur: "SKL/Ijasah", pendaftaran: "1 Mei 2026 - 31 Juli 2026", daftarUlang: "1 Agustus 2026" },
-        { jalur: "UTBK", pendaftaran: "1 Mei 2026 - 31 Juli 2026", daftarUlang: "1 Agustus 2026" },
-      ],
-    },
-    {
-      title: "Gelombang 3",
-      data: [
-        { jalur: "PMDK Raport", pendaftaran: "3 Agustus 2026 - 5 September 2026", daftarUlang: "12 Agustus 2026" },
-        { jalur: "SKL/Ijasah", pendaftaran: "3 Agustus 2026 - 5 September 2026", daftarUlang: "12 Agustus 2026" },
-        { jalur: "UTBK", pendaftaran: "3 Agustus 2026 - 5 September 2026", daftarUlang: "12 Agustus 2026" },
-      ],
-    },
-    {
-      title: "Gelombang 4",
-      data: [
-        { jalur: "PMDK Raport", pendaftaran: "15 September 2026 - 30 Oktober 2026", daftarUlang: "" },
-        { jalur: "SKL/Ijasah", pendaftaran: "15 September 2026 - 30 Oktober 2026", daftarUlang: "" },
-        
-      ],
-    },
-  ];
+  const [gelombangs, setGelombangs] = useState([]);
+  const [jadwalImg, setJadwalImg] = useState(null);
+  useEffect(() => {
+    fetchSchedules();
+    fetchImage();
+  }, []);
 
+  const fetchSchedules = async () => {
+    try {
+      const res = await api.get("/schedules");
+
+      // mapping data backend -> frontend
+      const mapped = res.data.map((item) => ({
+        title: item.gelombang,
+        data: (item.jalur || []).map((j) => ({
+          jalur: j,
+          pendaftaran: item.pendaftaran,
+          daftarUlang: item.daftar,
+        })),
+      }));
+
+      setGelombangs(mapped);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  const fetchImage = async () => {
+    try {
+      const res = await api.get("/schedule-image");
+      setJadwalImg(res.data.image);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   return (
     <div className="relative bg-gradient-to-b from-gray-50 via-blue-50/20 to-white min-h-screen py-20 overflow-hidden">
       {/* Decorative Background */}
@@ -66,12 +66,10 @@ export default function Jadwal() {
       {/* Hero Image - Full Responsive Width */}
       <div className="relative w-full mb-16 overflow-hidden">
         {/* Gambar Utama Full Width & Responsive */}
-        <img src={jadwalImg} alt="Jadwal PMB UNIPMA" className="w-full h-auto max-w-full object-contain md:object-cover rounded-none shadow-lg" />
-
-        {/* Floating Badge */}
+        <img src={jadwalImg || "/fallback.png"} alt="Jadwal PMB UNIPMA" className="w-full h-auto max-w-full object-contain md:object-cover rounded-none shadow-lg" />
         <div className="absolute top-4 right-4 bg-gradient-to-br from-yellow-400 to-orange-400 text-blue-900 px-5 py-2 rounded-lg shadow-lg font-semibold text-sm md:text-base hover:scale-105 transition-transform flex items-center gap-2">
           <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
-          Tahun 2025
+          Tahun {new Date().getFullYear()}
         </div>
       </div>
 
@@ -143,7 +141,7 @@ export default function Jadwal() {
             </div>
           </div>
           <a
-            href="#daftar"
+            href="/register"
             className="whitespace-nowrap bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3.5 rounded-xl font-semibold hover:shadow-xl hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 flex items-center gap-2"
           >
             Daftar Sekarang
@@ -159,7 +157,7 @@ export default function Jadwal() {
             <div className="w-10 h-10 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-lg flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
-            <h4 className="font-semibold text-gray-900">3 Gelombang</h4>
+            <h4 className="font-semibold text-gray-900">{gelombangs.length} Gelombang</h4>
           </div>
           <p className="text-sm text-gray-600 font-light">Pilih gelombang sesuai kesiapan Anda</p>
         </div>

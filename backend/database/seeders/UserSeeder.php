@@ -12,23 +12,10 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name'=>'Admin',
-            'email'=>'admin@example.com',
+            'email'=>'admin@gmail.com',
             'password'=>Hash::make('password'),
             'role'=>'admin',
         ]);
 
-        User::create([
-            'name'=>'Editor',
-            'email'=>'editor@example.com',
-            'password'=>Hash::make('password'),
-            'role'=>'driver',
-        ]);
-
-        User::create([
-            'name'=>'User',
-            'email'=>'user@example.com',
-            'password'=>Hash::make('password'),
-            'role'=>'user',
-        ]);
     }
 }

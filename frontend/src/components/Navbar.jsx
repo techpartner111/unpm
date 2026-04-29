@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import unipmaLogo from "../assets/images/unipma.png";
-import { ChevronDown, Menu, X, Mail, MapPin, Facebook, Instagram, Youtube } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ChevronDown, Menu, X, Mail, MapPin, Facebook, Instagram, Youtube, User } from "lucide-react";
 
 export default function Navbar() {
   const [programDropdown, setProgramDropdown] = useState(false);
@@ -9,6 +10,7 @@ export default function Navbar() {
   const [showTopbar, setShowTopbar] = useState(true);
   const [topbarHeight, setTopbarHeight] = useState(0);
   const [navbarHeight, setNavbarHeight] = useState(0);
+  const [mobileLoginOpen, setMobileLoginOpen] = useState(false);
 
   const closeTimeoutProgram = useRef(null);
   const closeTimeoutGrafik = useRef(null);
@@ -51,14 +53,23 @@ export default function Navbar() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-6 py-2 flex justify-between items-center">
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4 md:gap-6">
+            {/* Login */}
+            <a href="/login" className="flex items-center gap-1.5 hover:text-yellow-300 transition-colors">
+              <User className="w-4 h-4 text-yellow-300" />
+              <span className="hidden md:inline">Login</span>
+            </a>
+
+            {/* Email */}
             <a href="mailto:pmb@unipma.ac.id" className="flex items-center gap-1.5 hover:text-yellow-300 transition-colors">
               <Mail className="w-4 h-4 text-yellow-300" />
-              <span>pmb@unipma.ac.id</span>
+              <span className="hidden md:inline">pmb@unipma.ac.id</span>
             </a>
+
+            {/* Wisata */}
             <a href="/wisata" className="flex items-center gap-1.5 hover:text-yellow-300 transition-colors">
               <MapPin className="w-4 h-4 text-yellow-300" />
-              <span>Wisata Madiun</span>
+              <span className="hidden md:inline">Wisata Madiun</span>
             </a>
           </div>
 
@@ -139,7 +150,7 @@ export default function Navbar() {
                       <a key={i} href={href} className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
                         {label}
                       </a>
-                    )
+                    ),
                   )}
                 </div>
               )}
@@ -181,6 +192,12 @@ export default function Navbar() {
                   <a href="https://pmb.unipma.ac.id/portal/daftar_S2" target="_blank" rel="noopener noreferrer" className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
                     Pasca Sarjana S2
                   </a>
+                  <Link to="/register?jenjang=s3" className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
+                    Pasca Sarjana S3
+                  </Link>
+                  <a href="https://pmb.unipma.ac.id/ln/daftar/" target="_blank" rel="noopener noreferrer" className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
+                    International Student
+                  </a>
                   <a href="https://pmb.unipma.ac.id/portal/daftar_RPL" target="_blank" rel="noopener noreferrer" className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
                     RPL Rekognisi Pembelajaran Lampau
                   </a>
@@ -195,10 +212,33 @@ export default function Navbar() {
 
           {/* 🔹 Tombol Aksi */}
           <div className="flex items-center gap-2.5">
-            <a href="/login" className="hidden md:block border border-white/30 text-white px-5 py-2 rounded-lg hover:bg-white/10 hover:border-white/50 transition-all text-sm font-medium">
-              Login
-            </a>
-            <a href="/register" className="hidden md:block bg-gradient-to-r from-yellow-400 to-yellow-300 text-blue-900 font-semibold px-5 py-2 rounded-lg hover:shadow-lg hover:shadow-yellow-400/30 hover:scale-105 transition-all text-sm">
+            <div className="relative hidden md:block group">
+              <button
+                className="border border-white/30 text-white px-5 py-2 rounded-lg 
+               hover:bg-white/10 hover:border-white/50 transition-all 
+               text-sm font-medium"
+              >
+                Login ▾
+              </button>
+
+              <div
+                className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg 
+                  overflow-hidden opacity-0 invisible 
+                  group-hover:opacity-100 group-hover:visible transition-all duration-200"
+              >
+                <a href="https://pmb.unipma.ac.id/" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                  Login Mahasiswa
+                </a>
+                <a href="https://pmb.unipma.ac.id/ln" className="block px-4 py-2 hover:bg-gray-100 text-sm">
+                  Login Mahasiswa International
+                </a>
+              </div>
+            </div>
+
+            <a
+              href="https://pmb.unipma.ac.id/portal/daftar"
+              className="hidden md:block bg-gradient-to-r from-yellow-400 to-yellow-300 text-blue-900 font-semibold px-5 py-2 rounded-lg hover:shadow-lg hover:shadow-yellow-400/30 hover:scale-105 transition-all text-sm"
+            >
               Daftar
             </a>
 
@@ -266,6 +306,12 @@ export default function Navbar() {
                 <a href="https://pmb.unipma.ac.id/portal/daftar_S2" target="_blank" rel="noreferrer" className="block hover:text-yellow-300">
                   Pasca Sarjana S2
                 </a>
+                <Link to="/register?jenjang=s3" className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
+                  Pasca Sarjana S3
+                </Link>
+                <a href="https://pmb.unipma.ac.id/ln/daftar/" target="_blank" rel="noopener noreferrer" className="block px-5 py-2.5 hover:bg-cyan-50 text-gray-700 hover:text-cyan-600 transition-all">
+                  International Student
+                </a>
                 <a href="https://pmb.unipma.ac.id/portal/daftar_RPL" target="_blank" rel="noreferrer" className="block hover:text-yellow-300">
                   RPL Rekognisi Pembelajaran Lampau
                 </a>
@@ -277,10 +323,28 @@ export default function Navbar() {
             </a>
 
             <div className="pt-4 border-t border-white/20">
-              <a href="/login" className="block border border-white/30 text-white px-4 py-2 rounded-lg text-center hover:bg-white/10 mb-2">
+              {/* Button Login */}
+              <button
+                onClick={() => setMobileLoginOpen(!mobileLoginOpen)}
+                className="w-full border border-white/30 text-white px-4 py-2 rounded-lg 
+               text-center hover:bg-white/10 mb-2 flex items-center justify-center gap-2"
+              >
                 Login
-              </a>
-              <a href="/register" className="block bg-yellow-300 text-blue-900 font-semibold px-4 py-2 rounded-lg text-center hover:scale-105 transition-all">
+                <ChevronDown className={`w-4 h-4 transition-transform ${mobileLoginOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              {/* Dropdown */}
+              <div className={`overflow-hidden transition-all duration-300 ${mobileLoginOpen ? "max-h-40 opacity-100" : "max-h-0 opacity-0"}`}>
+                <a href="https://pmb.unipma.ac.id/" className="block bg-white/10 text-white px-4 py-2 rounded-lg mb-1 hover:bg-white/20 text-center">
+                  Login Lokal
+                </a>
+                <a href="https://pmb.unipma.ac.id/ln" className="block bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 text-center">
+                  Login International
+                </a>
+              </div>
+
+              {/* Tombol Daftar */}
+              <a href="https://pmb.unipma.ac.id/portal/daftar" className="block bg-yellow-300 text-blue-900 font-semibold px-4 py-2 rounded-lg text-center hover:scale-105 transition-all mt-2">
                 Daftar
               </a>
             </div>

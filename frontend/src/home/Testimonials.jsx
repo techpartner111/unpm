@@ -113,7 +113,7 @@ export default function Testimonials() {
               <p className="text-gray-600 font-light">Bergabunglah dengan ribuan mahasiswa yang telah merasakan pengalaman belajar terbaik</p>
             </div>
             <a
-              href="/register"
+              href="https://pmb.unipma.ac.id/portal/daftar"
               className="bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-8 py-3.5 rounded-xl font-semibold hover:shadow-xl hover:shadow-cyan-500/30 hover:scale-105 transition-all duration-300 flex items-center gap-2"
             >
               Daftar Sekarang

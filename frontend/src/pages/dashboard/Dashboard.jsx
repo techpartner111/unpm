@@ -1,6 +1,5 @@
 import AdminDashboard from "./AdminDashboard";
-import DriverDashboard from "./DriverDashboard";
-import UserDashboard from "./UserDashboard";
+
 
 export default function Dashboard() {
   // Nanti ganti ini dengan data dari backend atau localStorage
@@ -17,10 +16,7 @@ export default function Dashboard() {
   switch (user.role) {
     case "admin":
       return <AdminDashboard />;
-    case "driver":
-      return <DriverDashboard />;
-    case "user":
-      return <UserDashboard />;
+
     default:
       return (
         <div style={{ textAlign: "center", marginTop: "50px" }}>

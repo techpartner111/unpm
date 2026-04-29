@@ -3,9 +3,19 @@ import api from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { User, Mail, Lock, Calendar, Phone, IdCard, BookOpen, LogIn } from "lucide-react";
 import unipmaLogo from "../assets/images/unipma.png"; // sesuaikan path
+import { useSearchParams } from "react-router-dom";
 
 export default function Register() {
   const [activeTab, setActiveTab] = useState("s1d3");
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const jenjang = searchParams.get("jenjang");
+    if (jenjang) {
+      setActiveTab(jenjang);
+    }
+  }, [searchParams]);
 
   const [formData, setFormData] = useState({
     nama: "",
@@ -96,14 +106,48 @@ export default function Register() {
               <option value="Pendidikan Dasar">Pendidikan Dasar</option>
               <option value="Bimbingan dan Konseling">Bimbingan dan Konseling</option>
               <option value="RPL - Pendidikan Ilmu Pengetahuan Sosial">RPL - Pendidikan Ilmu Pengetahuan Sosial</option>
-            
-
             </Select>
             <Input label="Nama Lengkap" name="nama" icon={<User />} type="text" onChange={handleChange} />
             <Input label="NIK" name="nik" icon={<IdCard />} type="text" onChange={handleChange} />
             <Input label="Email" name="email" icon={<Mail />} type="email" onChange={handleChange} />
             <Input label="Nomor HP" name="noHp" icon={<Phone />} type="tel" onChange={handleChange} />
             <Input label="Tahun Lulus Sarjana" name="tahunLulus" icon={<Calendar />} type="number" onChange={handleChange} />
+          </>
+        );
+
+      case "s3":
+        return (
+          <>
+            <Select label="Program Studi (Doktoral)" name="programStudi" onChange={handleChange}>
+              <option value="">-- Pilih Program Studi --</option>
+              <option value="Doktor Pendidikan Bahasa dan Sastra Indonesia">Doktor Pendidikan Bahasa dan Sastra Indonesia</option>
+              <option value="Doktor Pendidikan Dasar">Doktor Pendidikan Dasar</option>
+              <option value="Doktor Ilmu Pendidikan">Doktor Ilmu Pendidikan</option>
+            </Select>
+
+            <Input label="Nama Lengkap" name="nama" icon={<User />} type="text" onChange={handleChange} />
+            <Input label="NIK" name="nik" icon={<IdCard />} type="text" onChange={handleChange} />
+            <Input label="Email" name="email" icon={<Mail />} type="email" onChange={handleChange} />
+            <Input label="Nomor HP" name="noHp" icon={<Phone />} type="tel" onChange={handleChange} />
+            <Input label="Tahun Lulus Magister (S2)" name="tahunLulus" icon={<Calendar />} type="number" onChange={handleChange} />
+          </>
+        );
+
+      case "international":
+        return (
+          <>
+            <Select label="Program Studi" name="programStudi" onChange={handleChange}>
+              <option value="">-- Select Study Program --</option>
+              <option value="Education">Education</option>
+              <option value="Educational Management">Educational Management</option>
+              <option value="Indonesian Language Education">Indonesian Language Education</option>
+            </Select>
+
+            <Input label="Full Name" name="nama" icon={<User />} type="text" onChange={handleChange} />
+            <Input label="Passport Number" name="passport" icon={<IdCard />} type="text" onChange={handleChange} />
+            <Input label="Email" name="email" icon={<Mail />} type="email" onChange={handleChange} />
+            <Input label="Phone Number" name="noHp" icon={<Phone />} type="tel" onChange={handleChange} />
+            <Input label="Year of Graduation" name="tahunLulus" icon={<Calendar />} type="number" onChange={handleChange} />
           </>
         );
 
@@ -127,13 +171,10 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-cyan-50 to-blue-100 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-6xl flex flex-col md:flex-row bg-white/20 backdrop-blur-xl rounded-3xl shadow-2xl overflow-hidden">
-        
         {/* Left Side Info */}
         <div className="hidden md:flex md:w-1/2 bg-gradient-to-b from-cyan-400 to-blue-600 p-10 text-white flex-col justify-center">
           <h2 className="text-4xl font-bold mb-4">Panduan Pendaftaran</h2>
-          <p className="text-gray-100/90 mb-6">
-            Silakan pilih jenis pendaftaran dan isi data sesuai jenjang studi yang Anda tuju.
-          </p>
+          <p className="text-gray-100/90 mb-6">Silakan pilih jenis pendaftaran dan isi data sesuai jenjang studi yang Anda tuju.</p>
           <ul className="list-disc list-inside space-y-2 text-gray-100/90">
             <li>Isi semua kolom data dengan benar.</li>
             <li>Gunakan email dan nomor HP aktif.</li>
@@ -151,10 +192,12 @@ export default function Register() {
           </div>
 
           {/* Tabs */}
-          <div className="flex justify-center mb-8 space-x-2">
+          <div className="flex flex-wrap justify-center mb-8 gap-2">
             <TabButton label="S1 & D3" active={activeTab === "s1d3"} onClick={() => setActiveTab("s1d3")} />
-            <TabButton label="S2 (Pascasarjana)" active={activeTab === "s2"} onClick={() => setActiveTab("s2")} />
-            <TabButton label="Jalur RPL" active={activeTab === "rpl"} onClick={() => setActiveTab("rpl")} />
+            <TabButton label="S2" active={activeTab === "s2"} onClick={() => setActiveTab("s2")} />
+            <TabButton label="S3" active={activeTab === "s3"} onClick={() => setActiveTab("s3")} />
+            <TabButton label="International Student" active={activeTab === "international"} onClick={() => setActiveTab("international")} />
+            <TabButton label="RPL" active={activeTab === "rpl"} onClick={() => setActiveTab("rpl")} />
           </div>
 
           {/* Form */}
@@ -168,9 +211,7 @@ export default function Register() {
             <div>
               <label className="block text-xs font-semibold text-gray-700 mb-2 uppercase tracking-wide">Verifikasi (Captcha)</label>
               <div className="flex items-center gap-3">
-                <div className="px-4 py-2 bg-cyan-100 text-cyan-700 font-bold rounded-lg shadow-sm text-lg select-none">
-                  {captchaQuestion}
-                </div>
+                <div className="px-4 py-2 bg-cyan-100 text-cyan-700 font-bold rounded-lg shadow-sm text-lg select-none">{captchaQuestion}</div>
                 <input
                   name="captcha"
                   type="text"
@@ -242,15 +283,7 @@ const Select = ({ label, name, onChange, children }) => (
 );
 
 const TabButton = ({ label, active, onClick }) => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${
-      active
-        ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg"
-        : "bg-white/60 text-gray-700 hover:bg-cyan-100"
-    }`}
-  >
+  <button type="button" onClick={onClick} className={`px-4 py-2 rounded-lg font-medium text-sm transition-all ${active ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg" : "bg-white/60 text-gray-700 hover:bg-cyan-100"}`}>
     {label}
   </button>
 );
